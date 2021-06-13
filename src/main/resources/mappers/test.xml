@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.service.impl.HomeMapper">
+
+	<insert id="signUp" parameterType="com.spring.service.User"
+		useGeneratedKeys="true" keyProperty="useridx">
+		INSERT INTO
+		user(id,pw,nickname,email)
+		VALUES (#{id},#{pw},#{nickname},#{email})
+	</insert>
+
+	<select id="signln" resultType="com.spring.service.User"
+		parameterType="com.spring.service.User">
+		SELECT * FROM user
+		WHERE id = #{id}
+		AND pw = #{pw}
+	</select>
+
+	<select id="idChk" resultType="int">
+		SELECT COUNT(*) FROM user
+		WHERE id
+		= #{id}
+	</select>
+
+	<select id="getUser" resultType="com.spring.service.User"
+		parameterType="String">
+		SELECT * FROM user
+		WHERE id = #{id}
+	</select>
+
+	<select id="getUserDetail" resultType="com.spring.service.User"
+		parameterType="String">
+		SELECT * FROM user
+		WHERE id = #{id}
+	</select>
+
+
+	<select id="getBookReviewList"
+		resultType="com.spring.service.Book_review" parameterType="String">
+		SELECT *
+		FROM book_review
+		order by
+		repostId DESC
+	</select>
+
+	<select id="getBookReviewSearchDetail"
+		resultType="com.spring.service.Book_review" parameterType="String">
+		SELECT *
+		FROM book_review
+		WHERE book_name = #{book_name}
+	</select>
+
+	<select id="getBookReviewDetail"
+		resultType="com.spring.service.Book_review" parameterType="int">
+		SELECT *
+		FROM book_review
+		WHERE repostId = #{repostId}
+	</select>
+
+	<update id="userUpdate" parameterType="com.spring.service.User">
+		UPDATE user
+		<set>
+			<if test='pw !=null and pw != ""'>
+				pw = #{pw},
+			</if>
+			<if test='nickname !=null and nickname != ""'>
+				nickname = #{nickname},
+			</if>
+			<if test='email !=null and email != ""'>
+				email = #{email}
+			</if>
+			<if test='userImgUrl !=null and userImgUrl != ""'>
+				userImgUrl = #{userImgUrl}
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="userDelete" parameterType="com.spring.service.User">
+		DELETE FROM user
+		WHERE
+		useridx = #{useridx}
+		and id = #{id}
+	</delete>
+
+	<insert id="insertBookReview"
+		parameterType="com.spring.service.Book_review" useGeneratedKeys="true"
+		keyProperty="repostId">
+		INSERT INTO book_review(title, bookID, book_name, content,
+		id, coverImgUrl, profileImgUrl, secret, isbn)
+		VALUES (#{title}, #{bookID},
+		#{book_name},#{content},#{id}, #{coverImgUrl},
+		#{profileImgUrl},
+		#{secret}, #{isbn})
+
+	</insert>
+
+	<update id="getBookReviewUpdate"
+		parameterType="com.spring.service.Book_review">
+		UPDATE book_review
+		<set>
+			<if test='bookID !=null and bookID != ""'>
+				bookID = #{bookID},
+			</if>
+			<if test='title !=null and title != ""'>
+				title = #{title},
+			</if>
+			<if test='book_name !=null and book_name != ""'>
+				book_name = #{book_name},
+			</if>
+			<if test='content !=null and content != ""'>
+				content = #{content},
+			</if>
+			<if test='id !=null and id != ""'>
+				id = #{id},
+			</if>
+			<if test='viewcnt !=null and viewcnt != ""'>
+				viewcnt = #{viewcnt}
+			</if>
+			<if test='profileImgUrl !=null and profileImgUrl != ""'>
+				profileImgUrl = #{profileImgUrl}
+			</if>
+		</set>
+		WHERE repostId = #{repostId}
+	</update>
+
+
+	<delete id="getBookReviewDelete"
+		parameterType="com.spring.service.Book_review">
+		DELETE FROM book_review
+		WHERE repostId = #{repostId}
+	</delete>
+
+	<insert id="insertComment"
+		parameterType="com.spring.service.Book_review_comment"
+		useGeneratedKeys="true" keyProperty="commentId">
+		INSERT INTO
+		book_review_comment(repostId,comment,id,profileImgUrl)
+		VALUES
+		(#{repostId},#{comment},#{id},#{profileImgUrl})
+	</insert>
+
+
+	<select id="getCommentDetail"
+		resultType="com.spring.service.Book_review_comment"
+		parameterType="int">
+		SELECT * FROM book_review_comment
+		WHERE commentId =
+		#{commentId}
+	</select>
+
+	<update id="updateComment"
+		parameterType="com.spring.service.Book_review_comment">
+		UPDATE book_review_comment
+		<set>
+			<if test='repostId !=null and repostId != ""'>
+				repostId = #{repostId},
+			</if>
+			<if test='comment !=null and comment != ""'>
+				comment = #{comment},
+			</if>
+			<if test='id !=null and id != ""'>
+				id = #{id}
+			</if>
+		</set>
+		WHERE commentId = #{commentId}
+		and id = #{id}
+	</update>
+
+	<delete id="deleteComment"
+		parameterType="com.spring.service.Book_review_comment">
+		DELETE FROM book_review_comment
+		and id = #{id}
+	</delete>
+
+	<select id="getCommentList"
+		resultType="com.spring.service.Book_review_comment"
+		parameterType="int">
+		SELECT * FROM book_review_comment
+		WHERE repostId =
+		#{repostId}
+		order by
+		commentId DESC
+	</select>
+
+
+
+	<select id="getReviewCnt"
+		resultType="com.spring.service.Book_review" parameterType="String">
+		SELECT *
+		FROM book_review
+		WHERE id = #{id}
+	</select>
+
+
+	<insert id="insertFavoriteReview"
+		parameterType="com.spring.service.Favorite_review"
+		useGeneratedKeys="true" keyProperty="favorite_reviewId">
+		INSERT INTO
+		favorite_review(repostId, id, bookID, title, book_name,
+		coverImgUrl,
+		content, profileImgUrl, regdate, writer)
+		VALUES
+		(#{repostId},#{id},#{bookID} ,#{title} ,#{book_name} ,#{coverImgUrl}
+		,#{content} ,#{profileImgUrl} ,#{regdate}, #{writer})
+	</insert>
+
+	<select id="getFavoriteReviewList"
+		resultType="com.spring.service.Favorite_review" parameterType="String">
+		SELECT *
+		FROM
+		favorite_review
+		WHERE id = #{id}
+		order by
+		favorite_reviewID DESC
+	</select>
+
+	<resultMap type="HashMap" id="getFavoriteReviewRepostIdList2">
+		<id column="repostId" property="repostId"></id>
+	</resultMap>
+
+	<select id="getFavoriteReviewRepostIdList"
+		resultMap="getFavoriteReviewRepostIdList2" parameterType="String">
+		SELECT
+		repostId
+		FROM
+		favorite_review
+		WHERE id = #{id}
+		order by
+		favorite_reviewID
+		DESC
+	</select>
+
+	<select id="getFavoriteReviewDetail"
+		resultType="com.spring.service.Favorite_review" parameterType="int">
+		SELECT *
+		FROM
+		favorite_review
+		WHERE favorite_reviewId = #{favorite_reviewId}
+	</select>
+
+
+	<select id="favoriteReivewChk" resultType="int">
+		SELECT COUNT(*) FROM
+		favorite_review
+		WHERE repostId = #{repostId}
+		and id = #{id}
+	</select>
+
+	<delete id="FavoriteReviewDelete"
+		parameterType="com.spring.service.Favorite_review">
+		DELETE FROM favorite_review
+		WHERE repostId = #{repostId}
+		and id = #{id}
+	</delete>
+
+	<select id="favoriteReivewcount" resultType="int">
+		SELECT COUNT(*) FROM
+		favorite_review
+		WHERE repostId = #{repostId}
+	</select>
+
+	<insert id="insertFavoriteBookC"
+		parameterType="com.spring.service.Read_check" useGeneratedKeys="true"
+		keyProperty="tblId">
+		INSERT INTO read_check(bookID,
+		book_name, bookImgUrl,
+		id,
+		categoryID, promise, chk, author, publisher, description, pubdate,
+		link, isbn)
+		VALUES
+		(#{bookID}, #{book_name},
+		#{bookImgUrl}, #{id},
+		#{categoryID},
+		#{promise}, 0, #{author}, #{publisher}, #{description},
+		#{pubdate}, #{link}, #{isbn})
+	</insert>
+
+	<select id="getFavoriteListC"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		and
+		chk = 0
+		order by
+		tblId DESC
+	</select>
+
+	<select id="getFavoriteDetailC"
+		resultType="com.spring.service.Read_check" parameterType="int">
+		SELECT *
+		FROM
+		read_check
+		WHERE tblId = #{tblId}
+		and
+		chk = 0
+	</select>
+
+	<select id="favoriteChk" resultType="int">
+		SELECT COUNT(*) FROM
+		read_check
+		WHERE bookID = #{bookID}
+		and id = #{id}
+		and
+		chk = 0
+	</select>
+
+	<delete id="FavoriteDeleteC"
+		parameterType="com.spring.service.Read_check">
+		DELETE FROM read_check
+		WHERE bookID = #{bookID}
+		and id =
+		#{id}
+		and
+		chk = 0
+	</delete>
+
+	<select id="favoritecount" resultType="int">
+		SELECT COUNT(*) FROM
+		read_check
+		WHERE bookID = #{bookID}
+		and id =
+		#{id}
+		and
+		chk = 0
+	</select>
+
+	<insert id="insertReadingBookC"
+		parameterType="com.spring.service.Read_check" useGeneratedKeys="true"
+		keyProperty="tblId">
+		INSERT INTO read_check(bookID,
+		book_name, bookImgUrl, id,
+		categoryID, reading_start_date, chk, author, publisher, description,
+		pubdate, link, isbn)
+		VALUES
+		(#{bookID},#{book_name},
+		#{bookImgUrl},
+		#{id},
+		#{categoryID},
+		#{reading_start_date}, 1, #{author}, #{publisher},
+		#{description}, #{pubdate}, #{link}, #{isbn})
+	</insert>
+
+	<select id="getReadingBookListC"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		and
+		chk = 1
+		order by
+		tblId DESC
+	</select>
+
+	<select id="getReadingBookDetailC"
+		resultType="com.spring.service.Read_check" parameterType="int">
+		SELECT *
+		FROM
+		read_check
+		WHERE tblId = #{tblId}
+		and
+		chk = 1
+	</select>
+
+
+	<select id="readingChkC" resultType="int">
+		SELECT COUNT(*) FROM
+		read_check
+		WHERE bookID = #{bookID}
+		and id = #{id}
+		and
+		chk = 1
+	</select>
+
+	<delete id="readingDeleteC"
+		parameterType="com.spring.service.Read_check">
+		DELETE FROM read_check
+		WHERE bookID = #{bookID}
+		and id =
+		#{id}
+		and
+		chk = 1
+	</delete>
+
+
+	<select id="readingcount" resultType="int">
+		SELECT *
+		From read_check
+		WHERE
+		id =#{id}
+		and
+		chk = 1
+	</select>
+
+	<insert id="insertReadBookC"
+		parameterType="com.spring.service.Read_check" useGeneratedKeys="true"
+		keyProperty="tblId">
+		INSERT INTO read_check(bookID,
+		book_name, bookImgUrl, id,
+		read_finish_date, chk, author, publisher, description, pubdate, link, isbn)
+		VALUES
+		(#{bookID},#{book_name},
+		#{bookImgUrl},
+		#{id},#{read_finish_date}, 2, #{author}, #{publisher}, #{description},
+		#{pubdate}, #{link}, #{isbn})
+	</insert>
+
+	<select id="getReadBookListC"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		and
+		chk = 2
+		order by
+		tblId DESC
+	</select>
+
+	<select id="getReadBookDetailC"
+		resultType="com.spring.service.Read_check" parameterType="int">
+		SELECT *
+		FROM
+		read_check
+		WHERE tblId = #{tblId}
+		and
+		chk = 2
+	</select>
+
+
+	<select id="readChkC" resultType="int">
+		SELECT COUNT(*) FROM
+		read_check
+		WHERE bookID = #{bookID}
+		and id = #{id}
+		and
+		chk = 2
+	</select>
+
+	<delete id="readDeleteC"
+		parameterType="com.spring.service.Read_check">
+		DELETE FROM read_check
+		WHERE bookID = #{bookID}
+		and id =
+		#{id}
+		and
+		chk = 2
+	</delete>
+
+	<select id="readcount" resultType="int">
+		SELECT *
+		From read_check
+		WHERE
+		id =#{id}
+		and
+		chk = 2
+	</select>
+
+	<select id="getGrade" resultType="com.spring.service.Read_check"
+		parameterType="String">
+		SELECT *
+		FROM read_check
+		WHERE id = #{id}
+		and chk = 2
+	</select>
+
+	<select id="getreadingcnt"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		and chk = 1
+	</select>
+
+	<select id="getfavoritecnt"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		and chk = 0
+	</select>
+
+	<select id="getMychkList"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		order by
+		tblId DESC
+	</select>
+
+	<select id="getUserChkListFavorite"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		and chk = 0
+		order by
+		tblId DESC
+	</select>
+
+	<select id="getUserChkListReading"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		and chk = 1
+		order by
+		tblId DESC
+	</select>
+
+	<select id="getUserChkListRead"
+		resultType="com.spring.service.Read_check" parameterType="String">
+		SELECT *
+		FROM
+		read_check
+		WHERE id = #{id}
+		and chk = 2
+		order by
+		tblId DESC
+	</select>
+
+</mapper>
